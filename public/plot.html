@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Tiffer</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->
+	<link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/animsition/css/animsition.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/daterangepicker/daterangepicker.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="css/util.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+<!--===============================================================================================-->
+</head>
+<style>
+div.ex3 {
+    color:lightgray;
+	width: 500px;
+	height: 250px;
+	overflow: auto;
+  }
+div.a {
+   color:lightgray;
+  font-size: 35px;
+}
+
+  
+  </style>
+<body class="container-contact100">
+    <center>
+        <div class="a">Welcome to Tiffler ♥	</div>
+        <br><hr>
+    <br>
+	<div id="dropDownSelect1"></div>
+		<div class="ex3" id="ex3">
+					  <ol>
+					  </ol>
+		</div>
+		<br><hr><br>
+		<div class="a" id="fuck"></div>
+		<br><hr>
+	</center>
+
+<!--===============================================================================================-->
+	<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
+	<script>
+		function submit(){
+		
+		var magnetLink = document.getElementById("magnetLink").value;
+		var magnet = magnetLink.replace("magnet:?xt=urn:","");
+		var doc = document.getElementById("pirateCountry");
+
+		var url = "http://localhost:3000/magnet/"+magnet;
+		localStorage.setItem("magnet", "");
+      	localStorage.setItem("magnet", magnet);
+		localStorage.setItem("countrySelection",doc.options[doc.selectedIndex].value)
+
+		$.get(url, function( data ) {
+        console.log("Bye we love you <3");
+        });
+
+		var doc = document.getElementById("pirateCountry");
+		window.location.href="plot.html";
+
+		}
+	</script>
+	
+<!--===============================================================================================-->
+<script src="https://threejs.org/build/three.js"></script>
+<script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+<script src="https://s3-eu-west-2.amazonaws.com/bckld/lab/loading.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+	<script src="vendor/animsition/js/animsition.min.js"></script>
+<!--===============================================================================================-->
+	<script src="vendor/bootstrap/js/popper.js"></script>
+	<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+<!--===============================================================================================-->
+	<script src="vendor/select2/select2.min.js"></script>
+	<script>
+		$(".selection-2").select2({
+			minimumResultsForSearch: 20,
+			dropdownParent: $('#dropDownSelect1')
+		});
+	</script>
+<!--===============================================================================================-->
+	<script src="vendor/daterangepicker/moment.min.js"></script>
+	<script src="vendor/daterangepicker/daterangepicker.js"></script>
+<!--===============================================================================================-->
+	<script src="vendor/countdowntime/countdowntime.js"></script>
+<!--===============================================================================================-->
+	<script src="js/main.js"></script>
+	<script>
+        var localMagnet = localStorage.getItem("magnet");
+        var localCountry = localStorage.getItem("countrySelection");
+
+		function updateScroll(){
+    	var element = document.getElementById("ex3");
+    	element.scrollTop = element.scrollHeight;
+		}
+
+        // ------ Marker object ------------------------------------------------
+        
+        function Marker() {
+            THREE.Object3D.call(this);
+        
+            var radius = 0.005;
+            var sphereRadius = 0.02;
+            var height = 0.05;
+        
+            var material = new THREE.MeshPhongMaterial({ color: 0xa64bf4 });
+        
+            var cone = new THREE.Mesh(new THREE.ConeBufferGeometry(radius, height, 8, 1, true), material);
+            cone.position.y = height * 0.5;
+            cone.rotation.x = Math.PI;
+        
+            var sphere = new THREE.Mesh(new THREE.SphereBufferGeometry(sphereRadius, 16, 8), material);
+            sphere.position.y = height * 0.95 + sphereRadius;
+        
+            this.add(cone, sphere);
+        }
+        
+        Marker.prototype = Object.create(THREE.Object3D.prototype);
+        
+        // ------ Earth object -------------------------------------------------
+        
+        function Earth(radius, texture) {
+            THREE.Object3D.call(this);
+        
+            this.userData.radius = radius;
+        
+            var earth = new THREE.Mesh(
+                new THREE.SphereBufferGeometry(radius, 64.0, 48.0),
+                new THREE.MeshPhongMaterial({
+                    map: texture
+                })
+            );
+        
+            this.add(earth);
+        }
+        
+        Earth.prototype = Object.create(THREE.Object3D.prototype);
+        
+        Earth.prototype.createMarker = function (lat, lon) {
+            var marker = new Marker();
+        
+            var latRad = lat * (Math.PI / 180);
+            var lonRad = -lon * (Math.PI / 180);
+            var r = this.userData.radius;
+        
+            marker.position.set(Math.cos(latRad) * Math.cos(lonRad) * r, Math.sin(latRad) * r, Math.cos(latRad) * Math.sin(lonRad) * r);
+            marker.rotation.set(0.0, -lonRad, latRad - Math.PI * 0.5);
+        
+            this.add(marker);
+        };
+        
+        // ------ Three.js code ------------------------------------------------
+        
+        var scene, camera, renderer;
+        var controls;
+        
+            scene = new THREE.Scene();
+            //scene.background = new THREE.Color( 0x000000, 0 );
+
+        
+            camera = new THREE.PerspectiveCamera(45, 4 / 3, 0.1, 100);
+            camera.position.set(0.0, 1.5, 3.0);
+        
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.autoRotate = true;
+            controls.autoRotateSpeed = -1.0;
+            controls.enablePan = false;
+        
+            var ambient = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambient);
+        
+            var direcitonal = new THREE.DirectionalLight(0xffffff, 0.5);
+            direcitonal.position.set(5.0, 2.0, 5.0).normalize();
+            scene.add(direcitonal);
+        
+            // just some code for the loading
+            var manager = createLoader(renderer.domElement, animate);
+        
+            var texLoader = new THREE.TextureLoader(manager).setCrossOrigin(true);
+        
+            var texture = texLoader.load('https://s3-eu-west-2.amazonaws.com/bckld/lab/textures/earth_latlon.jpg');
+            texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+        
+            var earth = new Earth(1.0, texture);
+        
+            function fuc(){
+            var getURL = "http://localhost:3000/find/" + localMagnet + "/" + localCountry;
+                $.get(getURL, function( data ) {
+                for(var i = 0; i < data.length; i++){
+                var ip = data[i].ipaddress;
+                var isp = data[i].as;
+                var consolidate = "<li>IP - " + ip + "</li>\n" + "<li>isp - " + isp + "</li>\n";
+                $("ol").append(consolidate);
+                earth.createMarker(data[i].lat, data[i].lon);
+				console.log(data);
+				document.getElementById("fuck").innerHTML = data[i].title;
+                }
+            });
+            }
+            
+            scene.add(earth);
+        
+            window.addEventListener('resize', onResize);
+            onResize();
+        
+            document.body.appendChild(renderer.domElement);
+        
+        function onResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+        
+        function animate() {
+            requestAnimationFrame(animate);
+        
+            controls.update();
+        
+            renderer.render(scene, camera);
+        }
+
+		setInterval(fuc,3000);
+		setInterval(updateScroll, 3000)
+        </script>
+</body>
+</html>

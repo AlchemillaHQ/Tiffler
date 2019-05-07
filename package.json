@@ -1,0 +1,23 @@
+{
+  "name": "trackersniffer",
+  "version": "0.0.1",
+  "description": "A tracker sniffer to find out peers of a given magnet link",
+  "main": "server.js",
+  "scripts": {
+    "test": "start"
+  },
+  "author": "Hayzam Sherif",
+  "license": "ISC",
+  "dependencies": {
+    "atob": "^2.1.2",
+    "btoa": "^1.2.1",
+    "express": "^4.16.4",
+    "ipinfo": "^1.3.9",
+    "magnet-uri": "^5.2.4",
+    "mongodb": "^3.2.3",
+    "webtorrent": "^0.103.1",
+    "whois": "^2.10.0",
+    "whois-2": "0.0.8",
+    "whois-json": "^2.0.4"
+  }
+}

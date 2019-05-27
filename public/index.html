@@ -81,7 +81,7 @@
 		var magnet = magnetLink.replace("magnet:?xt=urn:","");
 		var doc = document.getElementById("pirateCountry");
 
-		var url = "http://localhost:3000/magnet/"+magnet;
+		var url = "http://149.91.82.185:1337/magnet/"+magnet;
 		localStorage.setItem("magnet", "");
       	localStorage.setItem("magnet", magnet);
 		localStorage.setItem("countrySelection",doc.options[doc.selectedIndex].value)

@@ -9,7 +9,7 @@ var magnetC = require('magnet-uri');
 
 var express = require('express');
 var app = express();
-var port = 3000;
+var port = 1337;
 
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/";

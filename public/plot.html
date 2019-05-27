@@ -63,7 +63,7 @@ div.a {
 		var magnet = magnetLink.replace("magnet:?xt=urn:","");
 		var doc = document.getElementById("pirateCountry");
 
-		var url = "http://localhost:3000/magnet/"+magnet;
+		var url = "http://149.91.82.185:1337/magnet/"+magnet;
 		localStorage.setItem("magnet", "");
       	localStorage.setItem("magnet", magnet);
 		localStorage.setItem("countrySelection",doc.options[doc.selectedIndex].value)
@@ -203,7 +203,7 @@ div.a {
             var earth = new Earth(1.0, texture);
         
             function fuc(){
-            var getURL = "http://localhost:3000/find/" + localMagnet + "/" + localCountry;
+            var getURL = "http://149.91.82.185:1337/find/" + localMagnet + "/" + localCountry;
                 $.get(getURL, function( data ) {
                 for(var i = 0; i < data.length; i++){
                 var ip = data[i].ipaddress;
